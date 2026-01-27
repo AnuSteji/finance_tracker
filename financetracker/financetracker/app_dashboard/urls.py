@@ -1,0 +1,13 @@
+from django.urls import path
+from app_dashboard import views
+
+
+app_name="app_dashboard"
+
+urlpatterns = [
+    path("admindashboard/", views.admindashboard, name="admindashboard"),
+    path("", views.guestdashboard, name="guestdashboard"),
+    path("loginf/", views.loginf, name="loginf"),
+    path("userregistration/", views.userregistration, name="userregistration"),
+    path("userdashboard/", views.userdashboard, name="userdashboard"),
+]

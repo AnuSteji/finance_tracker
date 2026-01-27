@@ -1,0 +1,182 @@
+{% load static %}
+{% include 'Layout/Partials/Guest/header.html' %}
+
+<!-- HERO SECTION -->
+<div class="hero-slide owl-carousel site-blocks-cover">
+
+  <div class="intro-section" style="background-image: url('{% static 'Guest/images/hero_1.jpg' %}');">
+    <div class="container">
+      <div class="row align-items-center justify-content-center">
+        <div class="col-md-8 mx-auto text-center" data-aos="fade-up">
+          <h1>Smart Expense & Finance Manager</h1>
+          <p>Track expenses, manage income, plan budgets and gain full control of your finances</p>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="intro-section" style="background-image: url('{% static 'Guest/images/hero_2.jpg' %}');">
+    <div class="container">
+      <div class="row align-items-center justify-content-center">
+        <div class="col-md-8 mx-auto text-center" data-aos="fade-up">
+          <h1>One Platform. Total Financial Control.</h1>
+          <p>Designed for individuals, students, and small businesses</p>
+          <p><a href="#services" class="btn btn-primary">Explore Features</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ABOUT SECTION -->
+<div class="site-section">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-6 mb-4 mb-lg-0">
+        <img src="{% static 'Guest/images/hero_1.jpg' %}" class="img-fluid" alt="Finance App">
+      </div>
+      <div class="col-lg-5 ml-auto">
+        <span class="caption">About Our System</span>
+        <h2 class="title-with-line">Simple. Secure. Smart Finance Tracking</h2>
+        <p class="mb-4">
+          Our Expense Management System helps users record daily transactions,
+          monitor income sources, plan budgets, and generate financial insights —
+          all in one secure platform.
+        </p>
+
+        <ul class="list-unstyled ul-arrow">
+          <li>Daily expense tracking</li>
+          <li>Income & budget management</li>
+          <li>Visual reports & analytics</li>
+          <li>Secure user authentication</li>
+          <li>Admin monitoring & control</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="site-section pt-0">
+  <div class="container">
+    <div class="row text-center">
+      <div class="col-lg-3">
+        <strong class="d-block">10,000+</strong>
+        <span>Transactions Tracked</span>
+      </div>
+      <div class="col-lg-3">
+        <strong class="d-block">5,000+</strong>
+        <span>Active Users</span>
+      </div>
+      <div class="col-lg-3">
+        <strong class="d-block">99%</strong>
+        <span>Data Accuracy</span>
+      </div>
+      <div class="col-lg-3">
+        <strong class="d-block">100%</strong>
+        <span>Secure Platform</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SERVICES SECTION -->
+<div id="services" class="site-section bg-light">
+  <div class="container">
+    <div class="row mb-5 text-center">
+      <div class="col-lg-6 mx-auto">
+        <span class="caption">Features</span>
+        <h2 class="title-with-line">What You Can Do</h2>
+      </div>
+    </div>
+
+    <div class="row">
+
+      <div class="col-lg-4 col-md-6 mb-4">
+        <div class="feature-1">
+          <div class="icon-wrapper bg-primary">
+            <i class="bi bi-wallet2"></i>
+          </div>
+          <div class="feature-1-content">
+            <h2>Expense Tracking</h2>
+            <p>Record daily expenses with categories and date-wise tracking.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4 col-md-6 mb-4">
+        <div class="feature-1">
+          <div class="icon-wrapper bg-primary">
+            <i class="bi bi-cash-stack"></i>
+          </div>
+          <div class="feature-1-content">
+            <h2>Income Management</h2>
+            <p>Track multiple income sources and monthly earnings easily.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4 col-md-6 mb-4">
+        <div class="feature-1">
+          <div class="icon-wrapper bg-primary">
+            <i class="bi bi-pie-chart"></i>
+          </div>
+          <div class="feature-1-content">
+            <h2>Budget Planning</h2>
+            <p>Create budgets and avoid overspending with alerts.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4 col-md-6 mb-4">
+        <div class="feature-1">
+          <div class="icon-wrapper bg-primary">
+            <i class="bi bi-bar-chart-line"></i>
+          </div>
+          <div class="feature-1-content">
+            <h2>Financial Reports</h2>
+            <p>Visual charts for expense and income analysis.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4 col-md-6 mb-4">
+        <div class="feature-1">
+          <div class="icon-wrapper bg-primary">
+            <i class="bi bi-shield-lock"></i>
+          </div>
+          <div class="feature-1-content">
+            <h2>Secure Data</h2>
+            <p>All financial data is encrypted and protected.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4 col-md-6 mb-4">
+        <div class="feature-1">
+          <div class="icon-wrapper bg-primary">
+            <i class="bi bi-person-check"></i>
+          </div>
+          <div class="feature-1-content">
+            <h2>Admin Dashboard</h2>
+            <p>Admins can monitor users, data, and reports efficiently.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="intro-section small" style="background-image: url('{% static 'Guest/images/hero_1.jpg' %}');">
+  <div class="container text-center">
+    <h1>Start Managing Your Money Today</h1>
+    <p>Simple tools for smarter financial decisions</p>
+ 
+  </div>
+</div>
+
+{% include 'Layout/Partials/Guest/footer.html' %}

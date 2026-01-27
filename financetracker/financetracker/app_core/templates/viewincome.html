@@ -1,0 +1,63 @@
+{% load static %}
+{% include 'Layout/Partials/Admin/header.html' %}
+
+<div class="page-wrapper">
+  <div class="content container-fluid" style="padding-top:5px;">
+
+    <!-- HEADER SECTION -->
+    <div class="d-flex justify-content-between align-items-center" style="margin-bottom:5px;">
+      <div>
+        <h4 class="card-title" style="margin-bottom:2px;">Details View</h4>
+        <p class="card-subtitle text-muted" style="margin-bottom:0;">Income List</p>
+      </div>
+
+      <!-- DROPDOWN (Same place, smaller width) -->
+      <select class="form-select theme-select border-0" style="width:140px;">
+        <option>March 2025</option>
+        <option>April 2025</option>
+        <option>May 2025</option>
+      </select>
+    </div>
+
+    <!-- TABLE CARD (Reduced padding, no extra space) -->
+    <div class="card">
+      <div class="card-body" style="padding:6px;">
+
+        <div class="table-responsive">
+          <table class="table mb-0 text-nowrap varient-table align-middle fs-6" style="table-layout:fixed; width:100%;">
+            <thead>
+              <tr>
+                <th class="px-1 text-muted" style="width:60px;">No.</th>
+                <th class="px-1 text-muted" style="width:240px;">Name</th>
+                <th class="px-1 text-muted text-center" style="width:160px;">Actions</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {% for i in list %}
+              <tr>
+                <td class="px-1">{{ forloop.counter }}</td>
+                <td class="px-1">{{ i.namefield }}</td>
+
+                <td class="px-1 text-center">
+                  <a href="{% url 'core:delincome' i.id %}">
+                    <button class="btn btn-danger btn-sm me-1">Delete</button>
+                  </a>
+                  <a href="{% url 'core:editincome' i.id %}">
+                    <button class="btn btn-secondary btn-sm">Edit</button>
+                  </a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+
+          </table>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% include 'Layout/Partials/Admin/footer.html' %}

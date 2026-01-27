@@ -1,0 +1,225 @@
+{% load static %}
+
+
+<style>
+    body {
+
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+
+  background-size: 400% 400%;
+
+  animation: gradientBG 15s ease infinite;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  height: 100vh;
+
+  margin: 0;
+
+  color: #fff;
+
+}
+
+@keyframes gradientBG {
+
+  0% {
+
+    background-position: 0% 50%;
+
+  }
+
+  50% {
+
+    background-position: 100% 50%;
+
+  }
+
+  100% {
+
+    background-position: 0% 50%;
+
+  }
+
+}
+
+.login-container {
+
+  background: rgba(255, 255, 255, 0.1);
+
+  padding: 20px;
+
+  border-radius: 15px;
+
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+
+  backdrop-filter: blur(10px);
+
+  width: 90%;
+
+  max-width: 400px;
+
+  text-align: center;
+
+  animation: fadeIn 1s ease-in-out;
+
+}
+
+h1 {
+
+  font-size: 24px;
+
+  margin-bottom: 20px;
+
+}
+
+input {
+
+  width: 100%;
+
+  padding: 10px;
+
+  margin: 10px 0;
+
+  border: none;
+
+  border-radius: 25px;
+
+  font-size: 16px;
+
+  outline: none;
+
+  background: rgba(255, 255, 255, 0.8);
+
+}
+
+button {
+
+  width: 100%;
+
+  padding: 10px;
+
+  background: #ff6f61;
+
+  color: #fff;
+
+  border: none;
+
+  border-radius: 25px;
+
+  cursor: pointer;
+
+  font-size: 16px;
+
+  transition: background 0.3s ease, transform 0.2s ease;
+
+}
+
+button:hover {
+
+  background: #ff3b2f;
+
+  transform: scale(1.05);
+
+}
+
+p {
+
+  margin-top: 10px;
+
+}
+
+a {
+
+  color: #ff6f61;
+
+  text-decoration: none;
+
+}
+
+a:hover {
+
+  text-decoration: underline;
+
+}
+
+@keyframes fadeIn {
+
+  from {
+
+    opacity: 0;
+
+  }
+
+  to {
+
+    opacity: 1;
+
+  }
+
+}
+</style>
+
+
+  <div class="login-container">
+
+    <h1>Welcome to Finance Tracker</h1>
+
+    <form method="POST" action="{% url 'dashboard:loginf' %}">
+      {% csrf_token %}
+
+      <input type="text" id="username" placeholder="Username" name="username" required>
+
+      <input type="password" id="password" placeholder="Password" name="password" required>
+
+      <button type="submit">Login</button>
+
+    </form>
+
+    <p>Don't have an account? <a href="#" id="signup-link">Sign up</a></p>
+
+  </div>
+
+
+<script>
+    const loginForm = document.getElementById('login-form');
+
+const signupLink = document.getElementById('signup-link');
+
+loginForm.addEventListener('submit', (e) => {
+
+  e.preventDefault();
+
+  const username = document.getElementById('username').value;
+
+  const password = document.getElementById('password').value;
+
+  // Basic validation
+
+  if (username && password) {
+
+    alert('Login successful! Redirecting...');
+
+    window.location.href = 'app.html'; // Redirect to the main app
+
+  } else {
+
+    alert('Please enter a username and password.');
+
+  }
+
+});
+
+signupLink.addEventListener('click', (e) => {
+
+  e.preventDefault();
+
+  alert('Sign up functionality coming soon!');
+
+});
+</script>

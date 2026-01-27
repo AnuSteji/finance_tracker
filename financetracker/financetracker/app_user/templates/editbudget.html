@@ -1,0 +1,64 @@
+{% load static %}
+{% include 'Layout/Partials/User/header.html' %}
+
+<style>
+  .card {
+    border-radius: 10px;
+  }
+  .btn-primary {
+    background: black;
+    border: none;
+  }
+  .btn-primary:hover {
+    opacity: 0.8;
+  }
+  label {
+    font-weight: 500;
+    color: black;
+  }
+  input {
+    border: 1px solid #000;
+  }
+</style>
+
+<div class="body-wrapper-inner mt-5 pt-4">
+  <div class="container d-flex justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h4 class="fw-semibold mb-4 text-center text-dark">Edit Budget Details</h4>
+
+          <form action="{% url 'app_user:editbudget' ebu.id %}" method="POST">
+            {% csrf_token %}
+
+            <div class="mb-3">
+              <label class="form-label">User Name</label>
+              <input type="text" name="username" class="form-control" value="{{ ebu.user.username }}">
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Expense Head</label>
+              <input type="text" name="expensehead" class="form-control" value="{{ ebu.expensehead.name }}">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Month</label>
+              <input type="text" name="month" class="form-control" value="{{ ebu.month }}">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Amount (₹)</label>
+              <input type="text" name="amount" class="form-control amount-style" value="{{ ebu.amount }}">
+
+            
+
+            <button type="submit" class="btn btn-primary w-100">Save Changes</button>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% include 'Layout/Partials/User/footer.html' %}
+
+

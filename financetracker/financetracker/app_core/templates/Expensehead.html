@@ -1,0 +1,33 @@
+ {% load static %}
+ {% include 'Layout/Partials/Admin/header.html' %}
+  
+            <div class="card-body">
+              <h5 class="card-title fw-semibold mb-4">Expensehead</h5>
+              <div class="card">
+                <div class="card-body">
+                  <form method="POST" action="{% url 'core:expensehead' %}" enctype="multipart/form-data">
+			{% csrf_token %} 
+                    <div class="mb-3">
+                      <label for="exampleInputcatname" class="form-label"> Name</label>
+                      <input type="text" class="form-control" id="exampleInputcatname" name="name" aria-describedby="nameHelp">
+                      <div id="nameHelp" class="form-text"></div>
+                    </div>
+                    <div class="mb-3">
+                      <label for="exampleInputdescription" class="form-label">Description</label>
+                      <input type="text" class="form-control" id="exampleInputdescription" name="description">
+                    </div>
+                    
+                   
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                  </form>
+                </div>
+              </div>
+              
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% include 'Layout/Partials/Admin/footer.html' %}

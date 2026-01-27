@@ -1,0 +1,39 @@
+  {% include 'Layout/Partials/Admin/header.html' %}
+  
+            <div class="card-body">
+              <h5 class="card-title fw-semibold mb-4">Forms</h5>
+              <div class="card">
+                <div class="card-body">
+                  <form action="{% url 'core:editexpense' editexpense.id %}" method="POST">
+			{% csrf_token %} 
+                    <div class="mb-3">
+                      <label for="exampleInputdistname" class="form-label">NameField</label>
+                      <input type="text" class="form-control" id="exampleInputdistname" name="name" aria-describedby="namefieldHelp"  value={{editexpense.name}}>
+                      <div id="namefieldHelp" class="form-text"></div>
+                    </div>
+                    <div class="mb-3">
+                      <label for="exampleInputdistname" class="form-label">Description</label>
+                      <input type="text" class="form-control" id="exampleInputdistname" name="description" aria-describedby="namefieldHelp"  value={{editexpense.description}}>
+                      <div id="description" class="form-text"></div>
+                    </div>
+                    
+                    <!-- <div class="mb-3 form-check">
+                      <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                      <label class="form-check-label" for="exampleCheck1">Check me out</label>
+                    </div> -->
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                  </form>
+                </div>
+              </div>
+              
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% include 'Layout/Partials/Admin/footer.html' %}
+
+
+

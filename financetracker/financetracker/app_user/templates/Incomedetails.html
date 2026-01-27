@@ -1,0 +1,46 @@
+{% load static %}
+{% include 'Layout/Partials/User/header.html' %}
+
+<div class="body-wrapper-inner">
+  <div class="container-fluid">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <div>
+        <h5 class="card-title fw-semibold mb-4"></h5>
+
+        <br><br><br>
+                      
+ <form action="{% url 'user:incomedetails' %}" method="POST">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label">Incomehead</label>
+            <select name="incomehead" class="form-control">
+              <option value="">Select Incomehead</option>
+              {% for i in incomehead %}
+              <option value="{{i.id}}">{{i.namefield}}</option>
+              {% endfor %}
+            </select>
+            <div id="nameHelp" class="form-text"></div>
+            
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Date </label>
+            <input type="date" name="date" class="form-control">
+          </div>
+          
+
+          <div class="mb-3">
+            <label class="form-label">Amount </label>
+            <input type="number" name="amount" class="form-control">
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100">Save Income</button>
+        </form>
+        </div>
+</div>
+      </div>
+    </div>
+  </div>
+
+{% include 'Layout/Partials/User/footer.html' %}

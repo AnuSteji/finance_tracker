@@ -1,0 +1,65 @@
+({% load static %}) {% include 'Layout/Partials/Admin/header.html' %}
+
+<div class="content-body">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="d-md-flex align-items-center">
+              <div>
+                <div class="table-responsive mt-4">
+                  <table
+                    class="table mb-0 text-nowrap varient-table align-middle fs-3"
+                  >
+                    <thead>
+                      <div>
+                        <th scope="col" class="px-0 text-muted">Name</th>
+                        <th scope="col" class="px-0 text-muted">Description</th>
+                        <th scope="col" class="px-0 text-muted">Image</th>
+                        <th scope="col" class="px-0 text-muted">Delete</th>
+                        <th scope="col" class="px-0 text-muted">Update</th>
+                      </div>
+                    </thead>
+
+                    <tbody>
+
+                      {% for i in list %}
+
+                      <tr>
+                        <td>{{i.name}}</td>
+                        <td>{{i.description}}</td>
+                        <td>
+                          <img src="/media/{{i.img}}" style="width: 100px" />
+                        </td>
+
+                        <td>
+                          <a href="{% url 'core:deletecat' i.id %}"
+                            ><button type="submit" class="btn btn-primary">
+                              Delete
+                            </button></a
+                          >
+                        </td>
+                        <td>
+                          <a href="{% url 'core:editcat' i.id %}"
+                            ><button type="submit" class="btn bg-secondary">
+                              Update
+                            </button></a
+                          >
+                        </td>
+
+                      </tr>
+
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% include 'Layout/Partials/Admin/footer.html' %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

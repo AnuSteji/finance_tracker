@@ -1,0 +1,51 @@
+{% load static %}
+{% include 'Layout/Partials/Admin/header.html' %}
+
+
+
+        <div class="mb-4">
+          <h4 class="fw-bold text-primary">User Registrations</h4>
+          <p class="text-muted">Manage and view all registered users</p>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-hover align-middle text-nowrap">
+            <thead class="bg-light">
+              <tr>
+                <th class="text-muted px-3">Name</th>
+                <th class="text-muted px-3">Email</th>
+                <th class="text-muted px-3">Contact</th>
+                <th class="text-muted px-3">Image</th>
+                <th class="text-muted px-3">Address</th>
+                <th class="text-muted px-3">Location</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {% for i in list %}
+              <tr>
+                <td class="px-3 fw-semibold">{{ i.user.name }}</td>
+                <td class="px-3">{{ i.user.email }}</td>
+                <td class="px-3">{{ i.contact }}</td>
+                <td class="px-3">
+                  <img src="/media/{{ i.img }}" class="rounded-circle shadow-sm" 
+                       style="width:45px; height:45px; object-fit:cover;">
+                </td>
+                <td class="px-3">{{ i.address }}</td>
+                <td class="px-3"><span class="badge bg-primary">{{ i.location.name }}</span></td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="6" class="text-center text-muted py-4">No registrations found</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+{% include 'Layout/Partials/Admin/footer.html' %}

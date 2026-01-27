@@ -1,0 +1,40 @@
+{% load static %}
+  {% include 'Layout/Partials/Admin/header.html' %}
+  <div class="body-wrapper-inner">
+        <div class="container-fluid">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title fw-semibold mb-4">Forms</h5>
+              <div class="card">
+                <div class="card-body">
+                  <form action="{% url 'core:locationup' locationv.id %}" method="POST">
+			{% csrf_token %} 
+                    <div class="mb-3">
+                      <label for="exampleInputdistname" class="form-label">Location  Name</label>
+                      <input type="text" class="form-control" id="exampleInputdistname" name="name" aria-describedby="nameHelp"  value={{locationv.name}}>
+                      <div id="nameHelp" class="form-text"></div>
+                    </div>
+                    <div class="mb-3">
+                      <label for="exampleInputdistname" class="form-label">District Name</label>
+                      <select   class="form-control" id="exampleInputdistname" name="dis" aria-describedby="nameHelp"  >
+                      <option value="">Select District</option>
+                        {% for i in list %}
+                        <option value="{{i.id}}" {% if i.id == locationv.dis.id %}selected {% endif %}>{{i.name}}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                    
+                    
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                  </form>
+                </div>
+              </div>
+              
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% include 'Layout/Partials/Admin/footer.html' %}
