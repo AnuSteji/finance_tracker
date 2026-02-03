@@ -19,5 +19,6 @@ urlpatterns = [
     path("viewbudget/", views.viewbudget, name="viewbudget"),
     path("deletebudget/<int:id>/", views.deletebudget, name="deletebudget"),
     path("editbudget/<int:id>/", views.editbudget, name="editbudget"),
+    path("viewtotal/", views.viewtotal, name="viewtotal"),
     
 ]

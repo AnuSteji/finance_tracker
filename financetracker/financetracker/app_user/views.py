@@ -1,3 +1,4 @@
+from pyexpat.errors import messages
 from django.http import HttpResponse
 from django.shortcuts import render
 
@@ -140,7 +141,53 @@ def editbudget(request,id):
           return HttpResponse("<script>alert('Edited Successfully');window.location='/user/viewbudget/';</script>" )
     else:
          return render(request,"editbudget.html",{"ebu":ed})
-
     
 
-    
+
+
+
+def viewtotal(request):
+    expense_data = ExpenseDetails.objects.filter(user=request.user)
+    budget_data = BudgetDetails.objects.filter(user=request.user)
+
+    months = [
+        ("January", "January"), ("February", "February"), ("March", "March"),
+        ("April", "April"), ("May", "May"), ("June", "June"),
+        ("July", "July"), ("August", "August"), ("September", "September"),
+        ("October", "October"), ("November", "November"), ("December", "December"),
+    ]
+
+    total = {m: {"expense": 0.0, "budget": 0.0} for m, _ in months}
+
+    # EXPENSE
+    for e in expense_data:
+        if e.date:
+            month_key = e.date.strftime("%B")
+            if month_key in total:
+                total[month_key]["expense"] += float(e.amount)
+
+    # BUDGET
+    for b in budget_data:
+        if b.month in total:
+            total[b.month]["budget"] += float(b.amount)
+
+    totaldata = []
+
+    for m, name in months:
+        expense = total[m]["expense"]
+        budget = total[m]["budget"]
+
+        # 🚨 ALERT CONDITION
+        if expense > budget and budget > 0:
+            messages.warning(
+                request,
+                f"⚠️ {name}: Expense ({expense}) is higher than Budget ({budget})"
+            )
+
+        totaldata.append({
+            "month": name,
+            "total_expense": expense,
+            "total_budget": budget,
+        })
+
+    return render(request, "viewtotal.html", {"totaldata": totaldata})

@@ -6,6 +6,8 @@ from django.contrib.auth import authenticate,login
 from app_core.models import Location
 from app_dashboard.models import UserRegistration
 from financetracker.users.models import User
+from django.core.mail import send_mail
+
 
 
 # Create your views here.
@@ -75,6 +77,8 @@ def userregistration(request):
         ur.user=User.objects.get(username=username)
         ur.location=Location.objects.get(id=location)
         ur.save()
+        send_mail(subject='Registration Successful',message=f'Welcome to Finance Tracker {name}',from_email=None,recipient_list=[email])
+        
         
 
         return HttpResponse("<script>alert('User Registered Successfully');window.location='/loginf/';</script>")

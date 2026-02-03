@@ -1,0 +1,94 @@
+{% load static %}
+{% include 'Layout/Partials/User/header.html' %}
+
+<style>
+  .income-table th {
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 14px;
+  }
+  .income-table td {
+    font-size: 15px;
+  }
+  .income-table tbody tr:hover {
+    opacity: 0.85;
+    cursor: pointer;
+  }
+  .card-custom {
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border: none;
+  }
+  .amount-style {
+    font-weight: 700;
+  }
+</style>
+
+<div class="content-body">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <div class="card card-custom">
+          <div class="card-body">
+
+            <h4 class="mb-4">Monthly Budget vs Expense</h4>
+
+            <!-- ALERT MESSAGE -->
+            {% if messages %}
+              {% for message in messages %}
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                  {{ message }}
+                  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+              {% endfor %}
+            {% endif %}
+
+            <div class="table-responsive">
+              <table class="table table-bordered table-hover align-middle text-center income-table">
+                <thead class="table-dark">
+                  <tr>
+                    <th>Number</th>
+                    <th>Month</th>
+                    <th>Expense</th>
+                    <th>Budget</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {% for data in totaldata %}
+                  <tr class="{% if data.total_expense > data.total_budget %}table-danger{% endif %}">
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ data.month }}</td>
+
+                    <td class="amount-style"
+                        style="color:{% if data.total_expense > data.total_budget %}red{% endif %};">
+                      ₹ {{ data.total_expense }}
+                    </td>
+
+                    <td class="amount-style">
+                      ₹ {{ data.total_budget }}
+                    </td>
+
+                    <td>
+                      {% if data.total_expense > data.total_budget %}
+                        <span class="badge bg-danger">Over Budget</span>
+                      {% else %}
+                        <span class="badge bg-success">Within Budget</span>
+                      {% endif %}
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+
+              </table>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% include 'Layout/Partials/User/footer.html' %}
