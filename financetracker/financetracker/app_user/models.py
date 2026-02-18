@@ -18,7 +18,8 @@ class ExpenseDetails(models.Model):
     description=models.CharField(max_length=100,null=True,blank=True)
     date=models.DateField()
     create_date=models.DateField(auto_now_add=True)
-    amount=models.TextField()
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+
 
 class BudgetDetails(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE,default=1)

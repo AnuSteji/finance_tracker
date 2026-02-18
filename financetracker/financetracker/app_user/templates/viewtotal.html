@@ -72,7 +72,10 @@
 
                     <td>
                       {% if data.total_expense > data.total_budget %}
-                        <span class="badge bg-danger">Over Budget</span>
+                   <a href="{% url 'app_user:overbudget' data.month %}" class="btn btn-sm btn-danger">
+    Over Budget
+</a>
+
                       {% else %}
                         <span class="badge bg-success">Within Budget</span>
                       {% endif %}

@@ -179,4 +179,9 @@ dependencies = [
     "python-slugify==8.0.4",
     "redis==7.1.0",
     "whitenoise==6.11.0",
+    "joblib==1.5.3",
+    "numpy==2.4.2",
+    "scikit-learn>=1.8.0",
+
+
 ]

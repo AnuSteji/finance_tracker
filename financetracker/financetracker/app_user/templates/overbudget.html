@@ -1,0 +1,68 @@
+{% load static %}
+{% include 'Layout/Partials/User/header.html' %}
+
+<br><br><br><br><br>
+
+<div class="container">
+
+    <!-- PAGE TITLE -->
+    <h4 class="text-danger text-center mb-2">
+        Over Budget Expenses – {{ month }} {{ year }}
+    </h4>
+
+    <p class="text-center text-muted mb-4">
+        Showing over-budget expenses for the current month only
+    </p>
+
+    <!-- BACK BUTTON -->
+    <div class="text-center mb-3">
+        <a href="{% url 'app_user:viewtotal' %}" class="btn btn-primary">
+            ← Back to Monthly Overview
+        </a>
+    </div>
+    <div class="text-center mb-3">
+    <a href="{% url 'app_user:loan' %}" class="btn btn-outline-danger">
+        💳 Apply predict Eligibility
+    </a>
+</div>
+
+
+
+    <!-- OVER BUDGET TABLE -->
+    <table class="table table-bordered table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>Date</th>
+                <th>Expense Head</th>
+                <th>Description</th>
+                <th>Expense Amount</th>
+                <th>Budget Amount</th>
+                <th>Over By</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for e in overbudget_expenses %}
+            <tr class="table-danger">
+                <td>{{ e.date }}</td>
+                <td>{{ e.expensehead }}</td>
+                <td>{{ e.description }}</td>
+                <td>₹{{ e.amount }}</td>
+                <td>₹{{ e.budget }}</td>
+                <td class="fw-bold text-danger">
+                    ₹{{ e.over_by }}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="text-center text-success fw-semibold">
+                    🎉 No over-budget expenses this month
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+
+{% include 'Layout/Partials/User/footer.html' %}

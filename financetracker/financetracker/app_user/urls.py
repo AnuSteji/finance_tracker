@@ -20,5 +20,9 @@ urlpatterns = [
     path("deletebudget/<int:id>/", views.deletebudget, name="deletebudget"),
     path("editbudget/<int:id>/", views.editbudget, name="editbudget"),
     path("viewtotal/", views.viewtotal, name="viewtotal"),
+    path('overbudget/<str:month>/', views.overbudget, name='overbudget'),
+    path("loan/", views.prediction, name="loan"),
+
     
+
 ]

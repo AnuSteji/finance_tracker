@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Loan Application</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 40px 15px;
+        }
+
+        .loan-card {
+            width: 100%;
+            max-width: 850px;
+            border-radius: 18px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .form-control, .form-select {
+            border-radius: 10px;
+            padding: 10px;
+        }
+
+        .submit-btn {
+            background: #667eea;
+            border-radius: 30px;
+            font-size: 18px;
+            padding: 12px;
+        }
+
+        .submit-btn:hover {
+            background: #5a67d8;
+        }
+
+        .section-title {
+            font-weight: 600;
+            margin-top: 20px;
+            color: #4a5568;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card loan-card p-4">
+    <h3 class="text-center mb-4">Loan Application Form</h3>
+
+    <form method="post" action="{% url 'app_user:loan' %}">
+        {% csrf_token %}
+
+        <div class="row g-3">
+
+            <div class="col-md-6">
+                <label class="form-label">Number of Dependents</label>
+                <input type="number" class="form-control" name="no_of_dependents" min="0" required>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label">Education</label>
+                <select class="form-select" name="education" required>
+                    <option value="">Select</option>
+                    <option value="1">Graduate</option>
+                    <option value="2">Not Graduate</option>
+                </select>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label">Self Employed</label>
+                <select class="form-select" name="self_employed" required>
+                    <option value="">Select</option>
+                    <option value="1">Yes</option>
+                    <option value="2">No</option>
+                </select>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label">Income Per Annum</label>
+                <input type="number" class="form-control" name="income_annum" required>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label">Loan Amount</label>
+                <input type="number" class="form-control" name="loan_amount" required>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Loan Term </label>
+                <input type="number" class="form-control" name="loan_term" required>        
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label">CIBIL Score</label>
+                <input type="number" class="form-control" name="cibil_score" min="300" max="900" required>
+            </div>
+
+            <h6 class="section-title">Asset Details</h6>
+
+            <div class="col-md-6">
+                <label class="form-label">Residential Asset Value</label>
+                <input type="number" class="form-control" name="residential_assets_value" required>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label">Commercial Asset Value</label>
+                <input type="number" class="form-control" name="commercial_assets_value" required>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label">Luxury Asset Value</label>
+                <input type="number" class="form-control" name="luxury_assets_value" required>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label">Bank Asset Value</label>
+                <input type="number" class="form-control" name="bank_asset_value" required>
+            </div>
+
+            <div class="col-12 mt-4">
+                <button type="submit" class="btn submit-btn w-100 text-white">
+                    Submit Application
+                </button>
+            </div>
+
+        </div>
+    </form>
+</div>
+
+</body>
+</html>
