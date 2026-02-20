@@ -2,6 +2,10 @@ from pyexpat.errors import messages
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate,login
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import never_cache
+from django.contrib.auth import logout
+
 
 from app_core.models import Location
 from app_dashboard.models import UserRegistration
@@ -10,10 +14,15 @@ from django.core.mail import send_mail
 
 
 
+
 # Create your views here.
 
+@never_cache
+@login_required(login_url='/loginf/')
 def admindashboard(request):
     return render(request, "Admintemplate.html")
+
+
 def guestdashboard(request):
     return render(request, "Guesttemplate.html")
 
@@ -77,17 +86,22 @@ def userregistration(request):
         ur.user=User.objects.get(username=username)
         ur.location=Location.objects.get(id=location)
         ur.save()
-        send_mail(subject='Registration Successful',message=f'Welcome to Finance Tracker {name}',from_email=None,recipient_list=[email])
-        
-        
-
+        send_mail(subject='🎉 Welcome to Finance Tracker!',message=f'Hi {name},Your registration was successful!Welcome to Finance Tracker. We’re excited to help you manage your expenses and budgets efficiently.You can now log in and start tracking your finances.Thank you for joining us!Best Regards,Finance Tracker Team',from_email=None,recipient_list=[email])
         return HttpResponse("<script>alert('User Registered Successfully');window.location='/loginf/';</script>")
     else:
         v=Location.objects.all()
         return render(request,"userregistration.html",{"list":v})
     
+@never_cache
+@login_required(login_url='/loginf/')    
 def userdashboard(request):
     return render(request, "Usertemplate.html")
+
+def logout_view(request):
+    logout(request)
+    return HttpResponse(
+        "<script>alert('Logged out successfully');window.location='/loginf/';</script>"
+    )
     
 
     

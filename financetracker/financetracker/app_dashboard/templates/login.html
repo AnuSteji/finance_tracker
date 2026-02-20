@@ -175,8 +175,9 @@ a:hover {
 
       <input type="text" id="username" placeholder="Username" name="username" required>
 
-      <input type="password" id="password" placeholder="Password" name="password" required>
-
+      <input class="form-control" name="password" type="password"
+placeholder="Enter Password" required minlength="8"
+title="Password must be at least 8 characters long.">
       <button type="submit">Login</button>
 
     </form>
@@ -185,7 +186,7 @@ a:hover {
       Forgot Password?
     </a>
   </p>
-    <p>Don't have an account? <a href="#" id="signup-link">Sign up</a></p>
+    <p>Don't have an account? <a href="{% url 'dashboard:userregistration' %}" id="signup-link">Sign up</a></p>
 
   </div>
 

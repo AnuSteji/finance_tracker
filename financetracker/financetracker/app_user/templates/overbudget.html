@@ -22,7 +22,7 @@
     </div>
     <div class="text-center mb-3">
     <a href="{% url 'app_user:loan' %}" class="btn btn-outline-danger">
-        💳 Apply predict Eligibility
+        💳 predict Loan Eligibility
     </a>
 </div>
 
@@ -32,9 +32,9 @@
     <table class="table table-bordered table-hover">
         <thead class="table-dark">
             <tr>
-                <th>Date</th>
+             
                 <th>Expense Head</th>
-                <th>Description</th>
+               
                 <th>Expense Amount</th>
                 <th>Budget Amount</th>
                 <th>Over By</th>
@@ -44,9 +44,9 @@
         <tbody>
             {% for e in overbudget_expenses %}
             <tr class="table-danger">
-                <td>{{ e.date }}</td>
+                
                 <td>{{ e.expensehead }}</td>
-                <td>{{ e.description }}</td>
+               
                 <td>₹{{ e.amount }}</td>
                 <td>₹{{ e.budget }}</td>
                 <td class="fw-bold text-danger">
