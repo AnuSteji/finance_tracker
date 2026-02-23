@@ -15,6 +15,7 @@ import pickle
 from app_core.models import Expensehead, Incomehead
 from app_user.models import BudgetDetails, ExpenseDetails, IncomeDetails
 from financetracker.users.models import User
+from django.db.models.functions import ExtractMonth
 
 
 # Create your views here.
@@ -140,8 +141,23 @@ def expensedetails(request):
 
 
 def viewexpense(request):
-    v=ExpenseDetails.objects.filter(user=request.user)
-    return render(request,"viewexpense.html",{"list":v})
+
+    month = request.GET.get('month')
+
+    if month:
+        expenses = ExpenseDetails.objects.filter(
+            user=request.user,
+            date__month=int(month)
+        )
+    else:
+        expenses = ExpenseDetails.objects.filter(user=request.user)
+
+    return render(request, "viewexpense.html", {
+        "list": expenses,
+        "selected_month": month
+    })
+
+
 def deleteexpense(request,id):
     d=ExpenseDetails.objects.get(id=id)
     d.delete()
@@ -164,25 +180,83 @@ def editexpense(request,id):
     else:
          return render(request,"editexpense.html",{"det":ed})
     
-def budgetdetails(request):
-    if request.method=='POST':
-        
-        expensehead=request.POST.get('expensehead')
-        month=request.POST.get('month')
-        amount=request.POST.get('amount')
-        
 
-        bd=BudgetDetails() 
-        bd.user=request.user
-        bd.expensehead=Expensehead.objects.get(id=expensehead)
-        bd.month=month
-        bd.amount=amount
-        bd.save()
-        return HttpResponse("<script>alert('Budget Details Added Successfully');window.location='/user/budgetdetails/';</script>")
-    else:
-        
-        return render(request, "budgetdetails.html",{"expensehead":Expensehead.objects.all()})
-    
+
+
+def budgetdetails(request):
+
+    # Month dictionary inside function
+    month_dict = {
+        "1": "January",
+        "2": "February",
+        "3": "March",
+        "4": "April",
+        "5": "May",
+        "6": "June",
+        "7": "July",
+        "8": "August",
+        "9": "September",
+        "10": "October",
+        "11": "November",
+        "12": "December"
+    }
+
+    month_number = request.GET.get('month')
+    month_name = month_dict.get(month_number)
+
+    total_income = 0
+    total_budget = 0
+    remaining_income = 0
+
+    if month_number:
+
+        # Total Income of selected month
+        total_income = IncomeDetails.objects.filter(
+            user=request.user,
+            date__month=int(month_number)
+        ).aggregate(total=Sum('amount'))['total'] or 0
+
+        # Total Budget of selected month
+        total_budget = BudgetDetails.objects.filter(
+            user=request.user,
+            month=month_name
+        ).aggregate(total=Sum('amount'))['total'] or 0
+
+        # Remaining Income
+        remaining_income = total_income - total_budget
+
+
+    if request.method == 'POST':
+
+        expensehead = request.POST.get('expensehead')
+        month_number = request.POST.get('month')
+        amount = request.POST.get('amount')
+
+        month_name = month_dict.get(month_number)
+
+        BudgetDetails.objects.create(
+            user=request.user,
+            expensehead=Expensehead.objects.get(id=expensehead),
+            month=month_name,
+            amount=amount
+        )
+
+        return HttpResponse(
+            "<script>alert('Budget Added Successfully');window.location='/user/budgetdetails/';</script>"
+        )
+
+    context = {
+        "expensehead": Expensehead.objects.all(),
+        "total_income": total_income,
+        "total_budget": total_budget,
+        "remaining_income": remaining_income,
+        "selected_month": month_number
+    }
+
+    return render(request, "budgetdetails.html", context)
+
+
+
 def viewbudget(request):
     v=BudgetDetails.objects.filter(user=request.user)
     return render(request,"viewbudget.html",{"list":v})

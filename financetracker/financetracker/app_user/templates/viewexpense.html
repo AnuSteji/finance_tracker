@@ -2,84 +2,159 @@
 {% include 'Layout/Partials/User/header.html' %}
 
 <style>
-  .income-table th {
-    font-weight: 600;
-    text-transform: uppercase;
-    font-size: 14px;
-  }
-  .income-table td {
-    font-size: 15px;
-  }
-  .income-table tbody tr:hover {
-    opacity: 0.85;
-    cursor: pointer;
-  }
-  .card-custom {
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    border: none;
-  }
-  .amount-style {
-    font-weight: 700;
-  }
+
+.page-wrapper{
+margin-top:120px;
+}
+
+.income-table th {
+font-weight:600;
+text-transform:uppercase;
+font-size:14px;
+}
+
+.income-table td {
+font-size:15px;
+}
+
+.income-table tbody tr:hover {
+opacity:0.85;
+cursor:pointer;
+}
+
+.card-custom{
+border-radius:12px;
+box-shadow:0 4px 12px rgba(0,0,0,0.1);
+border:none;
+}
+
+.amount-style{
+font-weight:700;
+}
+
 </style>
+
 <div class="page-wrapper">
-  <div class="content">
-<div class="content-body">
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-12">
-        <div class="card card-custom card-custom">
-          <div class="card-body">
-<div>
-           <h4 class="mb-4">Expense Details</h4></div>
-<div>
-    
+
+<div class="container-fluid">
+
+<div class="row">
+<div class="col-12">
+
+<div class="card card-custom">
+
+<div class="card-body">
+
+<h4 class="mb-4">Expense Details</h4>
 
 
-            <div class="table-responsive">
-                <div>
-              <table class="table table-bordered table-hover align-middle text-center income-table">
-                <thead class="table-dark income-table">
-                  <tr>
-                    <br><br><br><br>
-                    
-                    <th>Expense Head</th>
-                    <th style="width: 250px;">Description</th>
-                    <th>Date</th>
-                    <th>Create Date</th>
-                    <th>Amount (₹)</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
+<!-- Month Filter -->
 
-                <tbody>
-                  {% for i in list %}
-                  <tr>
-                  
-                    <td>{{ i.expensehead.name }}</td>
-                    <td>{{ i.description }}</td>
-                    <td>{{ i.date }}</td>
-                    <td>{{ i.create_date }}</td>
-                   
-                    <td class="amount-style"><strong>₹ {{ i.amount }}</strong></td>
-                    <td><a href="{% url 'app_user:deleteexpense' i.id %}"><button type="submit" class="btn btn-primary">Delete</button></a>
-                    <a href="{% url 'app_user:editexpense' i.id %}"><button type="submit" class="btn btn-primary">Edit</button></a></td>
+<form method="GET">
 
-                   
-                  </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-              </div>
-            </div>
+<div class="row mb-4">
 
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+<div class="col-md-3">
+
+<select name="month" class="form-control" onchange="this.form.submit()">
+
+<option value="">All Months</option>
+
+<option value="1" {% if selected_month == "1" %}selected{% endif %}>January</option>
+<option value="2" {% if selected_month == "2" %}selected{% endif %}>February</option>
+<option value="3" {% if selected_month == "3" %}selected{% endif %}>March</option>
+<option value="4" {% if selected_month == "4" %}selected{% endif %}>April</option>
+<option value="5" {% if selected_month == "5" %}selected{% endif %}>May</option>
+<option value="6" {% if selected_month == "6" %}selected{% endif %}>June</option>
+<option value="7" {% if selected_month == "7" %}selected{% endif %}>July</option>
+<option value="8" {% if selected_month == "8" %}selected{% endif %}>August</option>
+<option value="9" {% if selected_month == "9" %}selected{% endif %}>September</option>
+<option value="10" {% if selected_month == "10" %}selected{% endif %}>October</option>
+<option value="11" {% if selected_month == "11" %}selected{% endif %}>November</option>
+<option value="12" {% if selected_month == "12" %}selected{% endif %}>December</option>
+
+</select>
+
+</div>
+
+</div>
+
+</form>
+
+
+<!-- Expense Table -->
+
+<div class="table-responsive">
+
+<table class="table table-bordered table-hover text-center income-table">
+
+<thead class="table-dark">
+
+<tr>
+
+<th>Expense Head</th>
+<th>Description</th>
+<th>Date</th>
+<th>Create Date</th>
+<th>Amount (₹)</th>
+<th>Actions</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for i in list %}
+
+<tr>
+
+<td>{{ i.expensehead.name }}</td>
+
+<td>{{ i.description }}</td>
+
+<td>{{ i.date }}</td>
+
+<td>{{ i.create_date }}</td>
+
+<td class="amount-style">₹ {{ i.amount }}</td>
+
+<td>
+
+<a href="{% url 'app_user:deleteexpense' i.id %}">
+<button class="btn btn-danger btn-sm">Delete</button>
+</a>
+
+<a href="{% url 'app_user:editexpense' i.id %}">
+<button class="btn btn-primary btn-sm">Edit</button>
+</a>
+
+</td>
+
+</tr>
+
+{% empty %}
+
+<tr>
+<td colspan="6">No Expense Records Found</td>
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+
 </div>
 
 {% include 'Layout/Partials/User/footer.html' %}
-

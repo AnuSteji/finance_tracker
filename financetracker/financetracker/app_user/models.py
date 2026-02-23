@@ -10,7 +10,7 @@ class IncomeDetails(models.Model):
     incomehead=models.ForeignKey(Incomehead,on_delete=models.CASCADE)
     date=models.DateField()
     create_date=models.DateField(auto_now_add=True)
-    amount=models.TextField()
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
 
 class ExpenseDetails(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE,default=1)
@@ -24,6 +24,6 @@ class ExpenseDetails(models.Model):
 class BudgetDetails(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE,default=1)
     expensehead=models.ForeignKey(Expensehead,on_delete=models.CASCADE)
-    month=models.CharField(max_length=20)
+    month=models.CharField(max_length=10)
     create_date=models.DateField(auto_now_add=True)
-    amount=models.TextField()
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
