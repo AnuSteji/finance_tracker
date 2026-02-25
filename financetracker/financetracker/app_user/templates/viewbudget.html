@@ -1,4 +1,3 @@
-
 {% load static %}
 {% include 'Layout/Partials/User/header.html' %}
 
@@ -24,61 +23,117 @@
     font-weight: 700;
   }
 </style>
+
 <div class="page-wrapper">
   <div class="content">
-<div class="content-body">
-  <div class="container-fluid">
+    <div class="content-body">
+      <div class="container-fluid">
+
+```
     <div class="row">
       <div class="col-12">
-        <div class="card card-custom card-custom">
+
+        <div class="card card-custom">
           <div class="card-body">
-<div>
-           <h4 class="mb-4">Budget Details</h4></div>
-<div>
-    
+            <br><br><br>
 
+            <h4 class="mb-4">Budget Details</h4>
 
+            <!-- Month Filter (Auto Submit) -->
+            <form method="GET" id="monthForm" class="mb-4">
+
+              <div class="row">
+                <div class="col-md-3">
+
+                  <select name="month" class="form-control"
+                          onchange="document.getElementById('monthForm').submit();">
+
+                    <option value="">All Months</option>
+
+                    <option value="January" {% if selected_month == "January" %}selected{% endif %}>January</option>
+                    <option value="February" {% if selected_month == "February" %}selected{% endif %}>February</option>
+                    <option value="March" {% if selected_month == "March" %}selected{% endif %}>March</option>
+                    <option value="April" {% if selected_month == "April" %}selected{% endif %}>April</option>
+                    <option value="May" {% if selected_month == "May" %}selected{% endif %}>May</option>
+                    <option value="June" {% if selected_month == "June" %}selected{% endif %}>June</option>
+                    <option value="July" {% if selected_month == "July" %}selected{% endif %}>July</option>
+                    <option value="August" {% if selected_month == "August" %}selected{% endif %}>August</option>
+                    <option value="September" {% if selected_month == "September" %}selected{% endif %}>September</option>
+                    <option value="October" {% if selected_month == "October" %}selected{% endif %}>October</option>
+                    <option value="November" {% if selected_month == "November" %}selected{% endif %}>November</option>
+                    <option value="December" {% if selected_month == "December" %}selected{% endif %}>December</option>
+
+                  </select>
+
+                </div>
+              </div>
+
+            </form>
+
+            <!-- Budget Table -->
             <div class="table-responsive">
-                <div>
+
               <table class="table table-bordered table-hover align-middle text-center income-table">
-                <thead class="table-dark income-table">
+
+                <thead class="table-dark">
                   <tr>
-                    <br><br><br><br>
-                   
                     <th>Expense Head</th>
                     <th>Month</th>
                     <th>Create Date</th>
                     <th>Amount (₹)</th>
                     <th>Actions</th>
-                    
                   </tr>
                 </thead>
 
                 <tbody>
+
                   {% for i in list %}
                   <tr>
-                   
+
                     <td>{{ i.expensehead.name }}</td>
                     <td>{{ i.month }}</td>
                     <td>{{ i.create_date }}</td>
-                   
-                    <td class="amount-style"><strong>₹ {{ i.amount }}</strong></td>
-                    <td><a href="{% url 'app_user:deletebudget' i.id %}"><button type="submit" class="btn btn-primary">Delete</button></a>
-                    <a href="{% url 'app_user:editbudget' i.id %}"><button type="submit" class="btn btn-primary">Edit</button></a></td>
+
+                    <td class="amount-style">
+                      <strong>₹ {{ i.amount }}</strong>
+                    </td>
+
+                    <td>
+                      <a href="{% url 'app_user:deletebudget' i.id %}">
+                        <button class="btn btn-danger btn-sm">Delete</button>
+                      </a>
+
+                      <a href="{% url 'app_user:editbudget' i.id %}">
+                        <button class="btn btn-primary btn-sm">Edit</button>
+                      </a>
+                    </td>
 
                   </tr>
+                  {% empty %}
+
+                  <tr>
+                    <td colspan="5">No budget records found.</td>
+                  </tr>
+
                   {% endfor %}
+
                 </tbody>
+
               </table>
-              </div>
+
             </div>
 
           </div>
         </div>
+
       </div>
     </div>
+
+  </div>
+</div>
+```
+
   </div>
 </div>
 
 {% include 'Layout/Partials/User/footer.html' %}
-

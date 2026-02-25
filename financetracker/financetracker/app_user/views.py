@@ -1,7 +1,7 @@
 import datetime
 from django.contrib import messages
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.db.models import Sum
 from datetime import datetime
 from datetime import date
@@ -42,8 +42,18 @@ def incomedetails(request):
         return render(request, "Incomedetails.html",{"incomehead":Incomehead.objects.all()})
     
 def viewdetails(request):
-    v=IncomeDetails.objects.filter(user=request.user)
-    return render(request,"viewdetails.html",{"list":v})
+
+    month = request.GET.get('month')
+
+    data = IncomeDetails.objects.filter(user=request.user)
+
+    if month:
+        data = data.filter(date__month=month)
+
+    return render(request, "viewdetails.html", {
+        "list": data,
+        "selected_month": month
+    })
 
 def deletedetails(request,id):
     d=IncomeDetails.objects.get(id=id)
@@ -68,76 +78,83 @@ def editdetails(request,id):
 
 
 
-
-
 def expensedetails(request):
 
-    if request.method == 'POST':
+    if request.method == "POST":
 
-        expensehead_id = request.POST.get('expensehead')
-        description = request.POST.get('description')
-        date_str = request.POST.get('date')
-        amount = float(request.POST.get('amount') or 0)
+        expensehead_id = request.POST.get("expensehead")
+        description = request.POST.get("description")
+        date_str = request.POST.get("date")
+        amount = float(request.POST.get("amount") or 0)
 
+        # Get Expense Head
         expensehead = Expensehead.objects.get(id=expensehead_id)
 
-        # ---------- SAVE EXPENSE ----------
-        exd = ExpenseDetails(
+        # Save Expense
+        ExpenseDetails.objects.create(
             user=request.user,
             expensehead=expensehead,
             description=description,
             date=date_str,
             amount=amount
         )
-        exd.save()
 
-        # ---------- MONTH CALCULATION ----------
+        # Convert date to month name
         expense_date = datetime.strptime(date_str, "%Y-%m-%d")
-        expense_month = expense_date.month
+        expense_month = expense_date.strftime("%B")
         expense_year = expense_date.year
 
-        # ---------- GET BUDGET ----------
+        # Get budget for that expense head and month
         budget = BudgetDetails.objects.filter(
             user=request.user,
             expensehead=expensehead,
-            month=expense_month   # Make sure month field stores month number
+            month=expense_month
         ).first()
 
-        if budget and float(budget.amount) > 0:
+        if budget:
 
-            # ---------- TOTAL MONTH EXPENSE ----------
+            # Calculate total expense for that month
             total_expense = ExpenseDetails.objects.filter(
                 user=request.user,
                 expensehead=expensehead,
                 date__year=expense_year,
-                date__month=expense_month
-            ).aggregate(total=Sum('amount'))['total'] or 0
+                date__month=expense_date.month
+            ).aggregate(total=Sum("amount"))["total"] or 0
 
-            total_expense = float(total_expense)
             budget_amount = float(budget.amount)
+            total_expense = float(total_expense)
 
-            # ---------- CHECK STATUS ----------
-            if total_expense > budget_amount:
-                exceeded = total_expense - budget_amount
-                msg = f"⚠ Budget exceeded by ₹{exceeded}"
+            remaining_budget = budget_amount - total_expense
+
+            if remaining_budget < 0:
+                messages.warning(
+                    request,
+                    f"{expensehead.name} budget exceeded by ₹{abs(remaining_budget)}"
+                )
             else:
-                remaining = budget_amount - total_expense
-                msg = f"✅ Expense added successfully! Remaining budget: ₹{remaining}"
+                messages.success(
+                    request,
+                    f"₹{amount} added to {expensehead.name}. Remaining budget: ₹{remaining_budget}"
+                )
 
         else:
-            msg = "✅ Expense added successfully! "
+            messages.info(
+                request,
+                f"No budget set for {expensehead.name} in {expense_month}"
+            )
 
-        return HttpResponse(
-            f"<script>alert('{msg}');window.location='/user/expensedetails/';</script>"
-        )
+        return redirect("user:expensedetails")
 
-    # ---------- GET REQUEST ----------
+    # GET request
+    expenseheads = Expensehead.objects.all()
+
     return render(
         request,
         "Expensedetails.html",
-        {"expensehead": Expensehead.objects.all()}
+        {
+            "expensehead": expenseheads
+        }
     )
-
 
 
 def viewexpense(request):
@@ -258,8 +275,26 @@ def budgetdetails(request):
 
 
 def viewbudget(request):
-    v=BudgetDetails.objects.filter(user=request.user)
-    return render(request,"viewbudget.html",{"list":v})
+
+    month = request.GET.get('month')
+
+    if month:
+        v = BudgetDetails.objects.filter(
+            user=request.user,
+            month=month
+        )
+    else:
+        v = BudgetDetails.objects.filter(user=request.user)
+
+    return render(
+        request,
+        "viewbudget.html",
+        {
+            "list": v,
+            "selected_month": month
+        }
+    )
+
 
 def deletebudget(request,id):
     d=BudgetDetails.objects.get(id=id)
@@ -352,12 +387,14 @@ def viewtotal(request):
 
 
 def overbudget(request, month):
+
     current_year = date.today().year
 
-    # Convert month name → number
+    # Convert month name to month number
     month_number = datetime.strptime(month, "%B").month
 
-    # 🔥 GROUP & SUM expenses by expensehead
+
+    # Group expenses by expense head
     grouped_expenses = ExpenseDetails.objects.filter(
         user=request.user,
         date__month=month_number,
@@ -366,28 +403,43 @@ def overbudget(request, month):
         'expensehead'
     ).annotate(
         total_amount=Sum('amount')
-    ).order_by('-total_amount')
+    )
+
 
     budget_data = BudgetDetails.objects.filter(
         user=request.user,
         month=month
     )
 
+
     overbudget_expenses = []
+
 
     for item in grouped_expenses:
 
         expensehead_id = item['expensehead']
         total_amount = float(item['total_amount'])
 
-        # Get expense head name
         expensehead_obj = Expensehead.objects.get(id=expensehead_id)
 
         budget = budget_data.filter(
             expensehead=expensehead_obj
         ).first()
 
-        if budget and total_amount > float(budget.amount):
+
+        # 🔴 CASE 1 : No budget set
+        if not budget:
+
+            overbudget_expenses.append({
+                "expensehead": expensehead_obj.name,
+                "amount": total_amount,
+                "budget": "Not Set",
+                "over_by": total_amount
+            })
+
+
+        # 🔴 CASE 2 : Expense greater than budget
+        elif total_amount > float(budget.amount):
 
             overbudget_expenses.append({
                 "expensehead": expensehead_obj.name,
@@ -395,6 +447,7 @@ def overbudget(request, month):
                 "budget": budget.amount,
                 "over_by": total_amount - float(budget.amount)
             })
+
 
     return render(request, "overbudget.html", {
         "overbudget_expenses": overbudget_expenses,

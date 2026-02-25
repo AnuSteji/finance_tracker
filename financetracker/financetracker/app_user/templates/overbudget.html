@@ -11,57 +11,80 @@
     </h4>
 
     <p class="text-center text-muted mb-4">
-        Showing over-budget expenses for the current month only
+        Showing expenses that exceeded the budget or have no budget set
     </p>
 
-    <!-- BACK BUTTON -->
-    <div class="text-center mb-3">
+    <!-- BUTTONS -->
+    <div class="text-center mb-4">
+
         <a href="{% url 'app_user:viewtotal' %}" class="btn btn-primary">
             ← Back to Monthly Overview
         </a>
-    </div>
-    <div class="text-center mb-3">
-    <a href="{% url 'app_user:loan' %}" class="btn btn-outline-danger">
-        💳 predict Loan Eligibility
-    </a>
-</div>
 
+        <a href="{% url 'app_user:loan' %}" class="btn btn-outline-danger">
+            💳 Predict Loan Eligibility
+        </a>
+
+    </div>
 
 
     <!-- OVER BUDGET TABLE -->
-    <table class="table table-bordered table-hover">
-        <thead class="table-dark">
-            <tr>
-             
-                <th>Expense Head</th>
-               
-                <th>Expense Amount</th>
-                <th>Budget Amount</th>
-                <th>Over By</th>
-            </tr>
-        </thead>
+    <div class="card shadow-sm">
+        <div class="card-body">
 
-        <tbody>
-            {% for e in overbudget_expenses %}
-            <tr class="table-danger">
-                
-                <td>{{ e.expensehead }}</td>
-               
-                <td>₹{{ e.amount }}</td>
-                <td>₹{{ e.budget }}</td>
-                <td class="fw-bold text-danger">
-                    ₹{{ e.over_by }}
-                </td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="6" class="text-center text-success fw-semibold">
-                    🎉 No over-budget expenses this month
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            <table class="table table-bordered table-hover text-center">
+
+                <thead class="table-dark">
+                    <tr>
+                        <th>Expense Head</th>
+                        <th>Total Expense</th>
+                        <th>Budget Amount</th>
+                        <th>Over By</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for e in overbudget_expenses %}
+                    <tr class="table-danger">
+
+                        <td>{{ e.expensehead }}</td>
+
+                        <td>
+                            <strong>₹{{ e.amount }}</strong>
+                        </td>
+
+                        <td>
+                            {% if e.budget == "Not Set" %}
+                                <span class="badge bg-warning text-dark">
+                                    Budget Not Set
+                                </span>
+                            {% else %}
+                                ₹{{ e.budget }}
+                            {% endif %}
+                        </td>
+
+                        <td class="fw-bold text-danger">
+                            ₹{{ e.over_by }}
+                        </td>
+
+                    </tr>
+                    {% empty %}
+
+                    <tr>
+                        <td colspan="4" class="text-center text-success fw-semibold">
+                            🎉 No over-budget expenses this month
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
 
 </div>
 
