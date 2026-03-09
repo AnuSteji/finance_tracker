@@ -22,6 +22,7 @@ urlpatterns = [
     path("viewtotal/", views.viewtotal, name="viewtotal"),
     path('overbudget/<str:month>/', views.overbudget, name='overbudget'),
     path("loan/", views.prediction, name="loan"),
+  
 
     
 

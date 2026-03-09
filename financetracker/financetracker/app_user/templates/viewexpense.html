@@ -1,64 +1,226 @@
 {% load static %}
 {% include 'Layout/Partials/User/header.html' %}
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 <style>
 
+body{
+background:#eef2f7;
+font-family:'Poppins',sans-serif;
+}
+
 .page-wrapper{
-margin-top:120px;
+margin-top:100px;
+padding:25px;
 }
 
-.income-table th {
-font-weight:600;
-text-transform:uppercase;
-font-size:14px;
-}
+/* Header */
 
-.income-table td {
-font-size:15px;
-}
-
-.income-table tbody tr:hover {
-opacity:0.85;
-cursor:pointer;
-}
-
-.card-custom{
+.dashboard-header{
+background:linear-gradient(135deg,#4e73df,#224abe);
+color:white;
+padding:25px;
 border-radius:12px;
-box-shadow:0 4px 12px rgba(0,0,0,0.1);
-border:none;
+margin-bottom:25px;
+box-shadow:0 8px 25px rgba(0,0,0,0.1);
 }
 
-.amount-style{
+.dashboard-header h3{
+font-weight:600;
+}
+
+/* Summary Cards */
+
+.summary-card{
+background:white;
+border-radius:12px;
+padding:20px;
+box-shadow:0 6px 18px rgba(0,0,0,0.08);
+transition:0.3s;
+}
+
+.summary-card:hover{
+transform:translateY(-4px);
+box-shadow:0 10px 25px rgba(0,0,0,0.12);
+}
+
+.summary-icon{
+font-size:28px;
+margin-bottom:10px;
+color:#4e73df;
+}
+
+.summary-title{
+font-size:14px;
+color:#777;
+}
+
+.summary-value{
+font-size:22px;
 font-weight:700;
 }
 
+/* Filter */
+
+.filter-box{
+background:white;
+padding:15px;
+border-radius:10px;
+box-shadow:0 4px 15px rgba(0,0,0,0.08);
+margin-bottom:25px;
+}
+
+/* Chart */
+
+.chart-card{
+background:white;
+border-radius:12px;
+box-shadow:0 6px 18px rgba(0,0,0,0.08);
+padding:20px;
+margin-bottom:25px;
+}
+
+.chart-container{
+width:300px;
+margin:auto;
+}
+
+/* Table */
+
+.table-card{
+background:white;
+border-radius:12px;
+box-shadow:0 6px 18px rgba(0,0,0,0.08);
+padding:20px;
+}
+
+.expense-table th{
+font-size:13px;
+text-transform:uppercase;
+}
+
+.expense-table td{
+font-size:14px;
+vertical-align:middle;
+}
+
+.expense-table tbody tr:hover{
+background:#f6f9fc;
+}
+
+.amount{
+font-weight:700;
+color:#27ae60;
+}
+
+/* Buttons */
+
+.btn-edit{
+background:#36b9cc;
+color:white;
+border:none;
+padding:5px 12px;
+border-radius:6px;
+}
+
+.btn-delete{
+background:#e74a3b;
+color:white;
+border:none;
+padding:5px 12px;
+border-radius:6px;
+}
+
 </style>
+
 
 <div class="page-wrapper">
 
 <div class="container-fluid">
 
-<div class="row">
-<div class="col-12">
 
-<div class="card card-custom">
+<!-- HEADER -->
 
-<div class="card-body">
+<div class="dashboard-header">
 
-<h4 class="mb-4">Expense Details</h4>
+<h3><i class="fa-solid fa-wallet"></i> Expense Dashboard</h3>
+
+</div>
 
 
-<!-- Month Filter -->
+<!-- SUMMARY CARDS -->
+
+<div class="row mb-4">
+
+<div class="col-md-4">
+
+<div class="summary-card text-center">
+
+<div class="summary-icon">
+<i class="fa-solid fa-money-bill-wave"></i>
+</div>
+
+<div class="summary-title">Total Expense</div>
+
+<div class="summary-value">₹ {{ total_expense }}</div>
+
+</div>
+
+</div>
+
+
+<div class="col-md-4">
+
+<div class="summary-card text-center">
+
+<div class="summary-icon">
+<i class="fa-solid fa-layer-group"></i>
+</div>
+
+<div class="summary-title">Categories</div>
+
+<div class="summary-value">{{ category_count }}</div>
+
+</div>
+
+</div>
+
+
+<div class="col-md-4">
+
+<div class="summary-card text-center">
+
+<div class="summary-icon">
+<i class="fa-solid fa-receipt"></i>
+</div>
+
+<div class="summary-title">Total Records</div>
+
+<div class="summary-value">{{ list|length }}</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- MONTH FILTER -->
+
+<div class="filter-box">
 
 <form method="GET">
 
-<div class="row mb-4">
+<div class="row justify-content-center">
 
 <div class="col-md-3">
 
 <select name="month" class="form-control" onchange="this.form.submit()">
 
-<option value="">All Months</option>
+<option value="">Select Month</option>
 
 <option value="1" {% if selected_month == "1" %}selected{% endif %}>January</option>
 <option value="2" {% if selected_month == "2" %}selected{% endif %}>February</option>
@@ -81,24 +243,45 @@ font-weight:700;
 
 </form>
 
+</div>
 
-<!-- Expense Table -->
+
+
+<!-- CHART -->
+
+<div class="chart-card text-center">
+
+<h5 class="mb-3">Expense Distribution</h5>
+
+<div class="chart-container">
+
+<canvas id="expensePieChart"></canvas>
+
+</div>
+
+</div>
+
+
+
+<!-- TABLE -->
+
+<div class="table-card">
+
+<h5 class="mb-3">Expense Records</h5>
 
 <div class="table-responsive">
 
-<table class="table table-bordered table-hover text-center income-table">
+<table class="table table-hover text-center expense-table">
 
 <thead class="table-dark">
 
 <tr>
-
 <th>Expense Head</th>
 <th>Description</th>
 <th>Date</th>
 <th>Create Date</th>
-<th>Amount (₹)</th>
+<th>Amount</th>
 <th>Actions</th>
-
 </tr>
 
 </thead>
@@ -117,16 +300,16 @@ font-weight:700;
 
 <td>{{ i.create_date }}</td>
 
-<td class="amount-style">₹ {{ i.amount }}</td>
+<td class="amount">₹ {{ i.amount }}</td>
 
 <td>
 
-<a href="{% url 'app_user:deleteexpense' i.id %}">
-<button class="btn btn-danger btn-sm">Delete</button>
+<a href="{% url 'app_user:editexpense' i.id %}">
+<button class="btn-edit">Edit</button>
 </a>
 
-<a href="{% url 'app_user:editexpense' i.id %}">
-<button class="btn btn-primary btn-sm">Edit</button>
+<a href="{% url 'app_user:deleteexpense' i.id %}">
+<button class="btn-delete">Delete</button>
 </a>
 
 </td>
@@ -148,13 +331,46 @@ font-weight:700;
 </div>
 
 </div>
-</div>
-
-</div>
-</div>
 
 </div>
 
 </div>
+
+
+<!-- CHART SCRIPT -->
+
+<script>
+
+const ctx = document.getElementById('expensePieChart');
+
+new Chart(ctx,{
+
+type:'doughnut',
+
+data:{
+labels: {{ labels|safe }},
+datasets:[{
+data: {{ data|safe }},
+backgroundColor:[
+'#4e73df',
+'#1cc88a',
+'#36b9cc',
+'#f6c23e',
+'#e74a3b',
+'#858796'
+]
+}]
+},
+
+options:{
+responsive:true,
+plugins:{
+legend:{position:'bottom'}
+}
+}
+
+});
+
+</script>
 
 {% include 'Layout/Partials/User/footer.html' %}

@@ -102,17 +102,9 @@ def logout_view(request):
     return HttpResponse(
         "<script>alert('Logged out successfully');window.location='/loginf/';</script>"
     )
-    
 
-    
+def about(request):
+    return render(request, "about.html")
 
-
-
-
-
-
-        
-           
-
-
-   
+def services(request):
+    return render(request, "services.html")

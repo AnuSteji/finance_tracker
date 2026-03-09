@@ -70,16 +70,13 @@
                   <a href="index.html" class="nav-link text-left">Home</a>
                 </li>
                 <li>
-                  <a href="about.html" class="nav-link text-left">About</a>
+                  <a href="{% url 'dashboard:about' %}" class="nav-link text-left">About</a>
                 </li>
-                <li class="has-children">
-                  <a href="" class="nav-link text-left">Services</a>
-                  <ul class="dropdown">
-                    <li><a href=""></a></li>
-                    <li><a href="services.html">Investment Management</a></li>
-                    <li><a href="services.html">Financial Funds</a></li>
-                  </ul>
+                <li>
+                  <a href="{% url 'dashboard:services' %}" class="nav-link text-left">Services</a>
                 </li>
+
+                
                 <li>
                   <a href="{% url 'dashboard:userregistration' %}" class="nav-link text-left">Registration</a>
                 </li>

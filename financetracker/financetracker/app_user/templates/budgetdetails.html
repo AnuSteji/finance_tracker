@@ -1,17 +1,133 @@
 {% load static %}
 {% include 'Layout/Partials/User/header.html' %}
 
+<style>
+
+body{
+background:linear-gradient(120deg,#eef2f7,#f8fbff);
+font-family:'Segoe UI',sans-serif;
+}
+
+/* PAGE TITLE */
+
+.page-title{
+font-weight:700;
+color:#2c3e50;
+letter-spacing:1px;
+margin-bottom:30px;
+}
+
+/* MONTH SELECT */
+
+.month-select{
+height:50px;
+border-radius:30px;
+padding:0 20px;
+border:none;
+box-shadow:0 4px 15px rgba(0,0,0,0.1);
+font-size:15px;
+}
+
+/* DASHBOARD CARDS */
+
+.dashboard-card{
+border-radius:18px;
+padding:25px;
+color:white;
+text-align:center;
+box-shadow:0 10px 25px rgba(0,0,0,0.15);
+transition:0.3s;
+}
+
+.dashboard-card:hover{
+transform:translateY(-5px);
+}
+
+.income{
+background:linear-gradient(135deg,#00c6ff,#0072ff);
+}
+
+.budget{
+background:linear-gradient(135deg,#43e97b,#38f9d7);
+}
+
+.remaining{
+background:linear-gradient(135deg,#ff9a9e,#fad0c4);
+}
+
+/* BUTTON */
+
+.expense-btn{
+padding:12px 40px;
+border-radius:30px;
+font-size:16px;
+font-weight:600;
+background:#ff4b2b;
+color:white;
+border:none;
+box-shadow:0 5px 15px rgba(0,0,0,0.2);
+transition:0.3s;
+}
+
+.expense-btn:hover{
+background:#ff2a00;
+transform:scale(1.05);
+}
+
+/* FORM CARD */
+
+.form-box{
+background:white;
+border-radius:20px;
+padding:30px;
+box-shadow:0 10px 35px rgba(0,0,0,0.1);
+}
+
+.form-box label{
+font-weight:600;
+color:#555;
+}
+
+.form-box input,
+.form-box select{
+height:45px;
+border-radius:10px;
+border:1px solid #ddd;
+}
+
+.save-btn{
+background:linear-gradient(135deg,#6a11cb,#2575fc);
+color:white;
+border:none;
+border-radius:25px;
+height:45px;
+font-weight:600;
+}
+
+.save-btn:hover{
+opacity:0.9;
+}
+
+</style>
+
+
 <div class="body-wrapper-inner">
 <div class="container-fluid">
 
-<br><br><br><br><br>
+<br><br><br><br>
 
-<!-- Month Selection -->
+
+<!-- MONTH SELECT -->
+
 <form method="GET">
-<div class="row mb-4">
+
+<div class="row justify-content-center mb-4">
+
 <div class="col-md-4">
 
-<select name="month" class="form-control" onchange="this.form.submit()">
+<select name="month"
+class="form-control month-select"
+onchange="this.form.submit()">
 
 <option value="">Select Month</option>
 
@@ -31,59 +147,74 @@
 </select>
 
 </div>
+
 </div>
+
 </form>
 
 
-<!-- Summary Cards -->
+<!-- DASHBOARD SUMMARY -->
+
+<div class="row text-center mb-4">
+
+<div class="col-md-4 mb-3">
+<div class="dashboard-card income">
+<h5>Total Income</h5>
+<h2>₹{{ total_income }}</h2>
+</div>
+</div>
+
+<div class="col-md-4 mb-3">
+<div class="dashboard-card budget">
+<h5>Total Budget</h5>
+<h2>₹{{ total_budget }}</h2>
+</div>
+</div>
+
+<div class="col-md-4 mb-3">
+<div class="dashboard-card remaining">
+<h5>Remaining Income</h5>
+<h2>₹{{ remaining_income }}</h2>
+</div>
+</div>
+
+</div>
+
+
+<!-- EXPENSE BUTTON -->
 
 <div class="row mb-4">
 
-<div class="col-md-4">
-<div class="card bg-success text-white text-center">
-<div class="card-body">
-<h5>Total Income</h5>
-<h3>₹{{ total_income }}</h3>
-</div>
-</div>
-</div>
+<div class="col-md-12 text-center">
 
-<div class="col-md-4">
-<div class="card bg-primary text-white text-center">
-<div class="card-body">
-<h5>Total Budget</h5>
-<h3>₹{{ total_budget }}</h3>
-</div>
-</div>
-</div>
+<a href="{% url 'user:expensedetails' %}"
+class="btn expense-btn">
 
-<div class="col-md-4">
-<div class="card bg-warning text-dark text-center">
-<div class="card-body">
-<h5>Remaining Income</h5>
-<h3>₹{{ remaining_income }}</h3>
-</div>
-</div>
+Expense Details
+
+</a>
+
 </div>
 
 </div>
 
 
-
-<!-- Budget Form -->
+<!-- BUDGET FORM -->
 
 <div class="row justify-content-center">
+
 <div class="col-md-6">
 
-<div class="card shadow-sm">
-<div class="card-body">
+<div class="form-box">
 
-<h5 class="text-center mb-4">Set Budget</h5>
+<h5 class="text-center mb-4">Set Monthly Budget</h5>
 
 <form method="POST">
+
 {% csrf_token %}
 
 <div class="mb-3">
+
 <label>Expense Head</label>
 
 <select name="expensehead" class="form-control">
@@ -100,6 +231,7 @@
 
 
 <div class="mb-3">
+
 <label>Month</label>
 
 <select name="month" class="form-control">
@@ -125,21 +257,33 @@
 
 
 <div class="mb-3">
+
 <label>Amount</label>
-<input type="number" name="amount" class="form-control">
+
+<input type="number"
+name="amount"
+class="form-control"
+placeholder="Enter budget amount">
+
 </div>
 
-<button class="btn btn-primary w-100">Save Budget</button>
+
+<button class="btn save-btn w-100">
+
+Save Budget
+
+</button>
 
 </form>
 
 </div>
+
 </div>
 
 </div>
-</div>
 
 </div>
+
 </div>
 
 {% include 'Layout/Partials/User/footer.html' %}

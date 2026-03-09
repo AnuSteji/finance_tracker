@@ -5,110 +5,113 @@
 
   <!-- TOTAL USERS -->
   <div class="col-lg-4">
-    <div class="card">
-      <div class="card-body d-flex align-items-center">
-        <span class="btn btn-primary rounded-circle round-48 hstack justify-content-center">
-          <i class="ti ti-users fs-6"></i>
-        </span>
-        <div class="ms-3">
-          <h4 class="mb-0 fw-bold">120</h4>
-          <span class="text-muted">Total Users</span>
-        </div>
+  <div class="card">
+    <div class="card-body d-flex align-items-center">
+      <span class="btn btn-primary rounded-circle round-48 hstack justify-content-center">
+        <i class="ti ti-users fs-6"></i>
+      </span>
+      <div class="ms-3">
+        <h4 class="mb-0 fw-bold">{{ total_users }}</h4>
+        <span class="text-muted">Total Users</span>
       </div>
     </div>
   </div>
+</div>
 
   <!-- ACTIVE USERS -->
   <div class="col-lg-4">
-    <div class="card">
-      <div class="card-body d-flex align-items-center">
-        <span class="btn btn-success rounded-circle round-48 hstack justify-content-center">
-          <i class="ti ti-user-check fs-6"></i>
-        </span>
-        <div class="ms-3">
-          <h4 class="mb-0 fw-bold">95</h4>
-          <span class="text-muted">Active Users</span>
-        </div>
+  <div class="card">
+    <div class="card-body d-flex align-items-center">
+      <span class="btn btn-success rounded-circle round-48 hstack justify-content-center">
+        <i class="ti ti-user-check fs-6"></i>
+      </span>
+      <div class="ms-3">
+        <h4 class="mb-0 fw-bold">{{ active_users }}</h4>
+        <span class="text-muted">Active Users</span>
       </div>
     </div>
   </div>
-
-  <!-- NEW USERS -->
-  <div class="col-lg-4">
-    <div class="card">
-      <div class="card-body d-flex align-items-center">
-        <span class="btn btn-warning rounded-circle round-48 hstack justify-content-center">
-          <i class="ti ti-user-plus fs-6"></i>
-        </span>
-        <div class="ms-3">
-          <h4 class="mb-0 fw-bold">15</h4>
-          <span class="text-muted">New Users This Month</span>
-        </div>
+</div>
+<div class="col-lg-4">
+  <div class="card">
+    <div class="card-body d-flex align-items-center">
+      <span class="btn btn-warning rounded-circle round-48 hstack justify-content-center">
+        <i class="ti ti-user-plus fs-6"></i>
+      </span>
+      <div class="ms-3">
+        <h4 class="mb-0 fw-bold">{{ new_users }}</h4>
+        <span class="text-muted">New Users This Month</span>
       </div>
     </div>
   </div>
+</div>
 
   <!-- USERS TABLE -->
   <div class="col-12 mt-3">
-    <div class="card">
-      <div class="card-body">
-        <h4 class="card-title">Registered Users</h4>
-        <p class="card-subtitle">All users in the system</p>
-        <div class="table-responsive mt-3">
-          <table class="table align-middle text-nowrap">
-            <thead class="table-dark">
-              <tr>
-                <th>ID</th>
-                <th>Username</th>
-                <th>Email</th>
-                <th>Date Joined</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <!-- Example users -->
-              <tr>
-                <td>1</td>
-                <td>
-                  <div class="d-flex align-items-center">
-                    <img src="{% static 'Admin/assets/images/profile/user-1.jpg' %}" width="40" class="rounded-circle me-2">
-                    <strong>John Doe</strong>
-                  </div>
-                </td>
-                <td>john@example.com</td>
-                <td>01 Feb 2026</td>
-                <td><span class="badge bg-success">Active</span></td>
-              </tr>
-              <tr>
-                <td>2</td>
-                <td>
-                  <div class="d-flex align-items-center">
-                    <img src="{% static 'Admin/assets/images/profile/user-2.jpg' %}" width="40" class="rounded-circle me-2">
-                    <strong>Jane Smith</strong>
-                  </div>
-                </td>
-                <td>jane@example.com</td>
-                <td>05 Feb 2026</td>
-                <td><span class="badge bg-danger">Inactive</span></td>
-              </tr>
-              <tr>
-                <td>3</td>
-                <td>
-                  <div class="d-flex align-items-center">
-                    <img src="{% static 'Admin/assets/images/profile/user-3.jpg' %}" width="40" class="rounded-circle me-2">
-                    <strong>Michael Roe</strong>
-                  </div>
-                </td>
-                <td>michael@example.com</td>
-                <td>10 Feb 2026</td>
-                <td><span class="badge bg-success">Active</span></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+  <div class="card">
+    <div class="card-body">
+
+      <h4 class="card-title">Registered Users</h4>
+      <p class="card-subtitle">All users in the system</p>
+
+      <div class="table-responsive mt-3">
+        <table class="table align-middle text-nowrap">
+
+          <thead class="table-dark">
+            <tr>
+             
+              <th>Username</th>
+              <th>Email</th>
+              <th>Date Joined</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {% for user in users %}
+            
+          <tr>
+
+            
+
+            <td>
+              <div class="d-flex align-items-center">
+                <img src="{% static 'Admin/assets/images/profile/user-1.jpg' %}" width="40" class="rounded-circle me-2">
+                <strong>{{ user.username }}</strong>
+              </div>
+            </td>
+
+            <td>{{ user.email }}</td>
+
+            <td>{{ user.date_joined|date:"d M Y" }}</td>
+
+            <td>
+              {% if user.is_active %}
+              <span class="badge bg-success">Active</span>
+              {% else %}
+              <span class="badge bg-danger">Inactive</span>
+              {% endif %}
+            </td>
+
+          </tr>
+          {% empty %}
+
+          <tr>
+            <td colspan="5" class="text-center text-muted">
+              No users found
+            </td>
+          </tr>
+
+          {% endfor %}
+
+          </tbody>
+
+        </table>
       </div>
+
     </div>
   </div>
+</div>
 
 </div>
 

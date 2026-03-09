@@ -1,91 +1,203 @@
 {% load static %}
 {% include 'Layout/Partials/User/header.html' %}
 
-<div class="body-wrapper-inner">
-  <div class="container-fluid">
+<style>
 
-```
-<br><br><br>
+body{
+background:#f4f6fb;
+}
 
-<!-- Alert Messages -->
+.page-wrapper{
+margin-top:120px;
+}
+
+
+
+/* Card Design */
+.expense-card{
+border:none;
+border-radius:15px;
+box-shadow:0 8px 25px rgba(0,0,0,0.08);
+padding:20px;
+background:white;
+}
+
+/* Form Labels */
+.form-label{
+font-weight:600;
+color:#34495e;
+}
+
+/* Buttons */
+.btn-save{
+background:#2ecc71;
+border:none;
+font-weight:600;
+}
+
+.btn-save:hover{
+background:#27ae60;
+}
+
+.btn-view{
+background:#3498db;
+color:white;
+border:none;
+font-weight:600;
+}
+
+.btn-view:hover{
+background:#2980b9;
+}
+
+/* Alert */
+.alert{
+border-radius:10px;
+}
+
+</style>
+
+<div class="page-wrapper">
+
+<div class="container">
+
+
+
+
+<!-- Alerts -->
+
 {% if messages %}
 <div class="row justify-content-center">
-  <div class="col-md-6">
-    {% for message in messages %}
-    <div class="alert alert-info alert-dismissible fade show" role="alert">
-      {{ message }}
-      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-    {% endfor %}
-  </div>
+<div class="col-md-6">
+{% for message in messages %}
+<div class="alert alert-info alert-dismissible fade show">
+{{ message }}
+<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+{% endfor %}
+</div>
 </div>
 {% endif %}
 
-<!-- Expense Form -->
-<div class="row justify-content-center mt-3">
-  <div class="col-md-6">
 
-    <div class="card shadow-sm">
-      <div class="card-body">
 
-        <h5 class="card-title fw-semibold text-center mb-4">
-          Expense Details
-        </h5>
+<div class="row justify-content-center">
 
-        <form action="{% url 'user:expensedetails' %}" method="POST">
-          {% csrf_token %}
+<div class="col-md-6">
 
-          <!-- Date -->
-          <div class="mb-3">
-            <label class="form-label">Date</label>
-            <input type="date" name="date" class="form-control" required>
-          </div>
+<div class="expense-card">
 
-          <!-- Expense Head -->
-          <div class="mb-3">
-            <label class="form-label">Expense Head</label>
-            <select name="expensehead" class="form-select" required>
-              <option value="">Select Expense Head</option>
-              {% for i in expensehead %}
-              <option value="{{ i.id }}">{{ i.name }}</option>
-              {% endfor %}
-            </select>
-          </div>
 
-          <!-- Description -->
-          <div class="mb-3">
-            <label class="form-label">Description</label>
-            <input type="text"
-                   name="description"
-                   class="form-control"
-                   placeholder="Enter description">
-          </div>
+<!-- Header Buttons -->
 
-          <!-- Amount -->
-          <div class="mb-4">
-            <label class="form-label">Amount</label>
-            <input type="number"
-                   name="amount"
-                   class="form-control"
-                   placeholder="Enter amount"
-                   required>
-          </div>
+<div class="d-flex justify-content-between align-items-center mb-3">
 
-          <!-- Submit -->
-          <button type="submit" class="btn btn-primary w-100">
-            Save Expense
-          </button>
+<h5 class="fw-bold mb-0">
+Expense Details
+</h5>
 
-        </form>
+<a href="{% url 'user:viewexpense' %}">
+<button class="btn btn-view btn-sm">
+Expenses
+</button>
+</a>
 
-      </div>
-    </div>
-
-  </div>
 </div>
-```
 
-  </div>
+
+<form action="{% url 'user:expensedetails' %}" method="POST">
+
+{% csrf_token %}
+
+
+<!-- Date -->
+
+<div class="mb-3">
+
+<label class="form-label">Date</label>
+
+<input type="date"
+name="date"
+class="form-control"
+required>
+
+</div>
+
+
+<!-- Expense Head -->
+
+<div class="mb-3">
+
+<label class="form-label">Expense Category</label>
+
+<select name="expensehead"
+class="form-select"
+required>
+
+<option value="">Select Expense Head</option>
+
+{% for i in expensehead %}
+
+<option value="{{ i.id }}">
+{{ i.name }}
+</option>
+
+{% endfor %}
+
+</select>
+
+</div>
+
+
+<!-- Description -->
+
+<div class="mb-3">
+
+<label class="form-label">Description</label>
+
+<input type="text"
+name="description"
+class="form-control"
+placeholder="Enter description">
+
+</div>
+
+
+<!-- Amount -->
+
+<div class="mb-4">
+
+<label class="form-label">Amount (₹)</label>
+
+<input type="number"
+name="amount"
+class="form-control"
+placeholder="Enter amount"
+required>
+
+</div>
+
+
+<!-- Save Button -->
+
+<button type="submit"
+class="btn btn-save w-100">
+
+Save Expense
+
+</button>
+
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
 </div>
 
 {% include 'Layout/Partials/User/footer.html' %}
