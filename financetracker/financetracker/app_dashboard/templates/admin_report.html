@@ -1,0 +1,164 @@
+{% load static %}
+{% include 'Layout/Partials/Admin/header.html' %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Finance Reports</h4>
+                    <p class="card-subtitle">Filter reports by date range</p>
+
+                    <form method="GET" action="{% url 'dashboard:admin_report' %}" class="mt-4">
+                        <div class="row align-items-end">
+                            <div class="col-md-3">
+                                <label for="start_date" class="form-label">Start Date</label>
+                                <input type="date" name="start_date" id="start_date" class="form-control" value="{{ start_date }}">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="end_date" class="form-label">End Date</label>
+                                <input type="date" name="end_date" id="end_date" class="form-control" value="{{ end_date }}">
+                            </div>
+                            <div class="col-md-4">
+                                <button type="submit" class="btn btn-primary">Filter</button>
+                                <a href="{% url 'dashboard:admin_report' %}" class="btn btn-outline-secondary">Reset</a>
+                                <a href="{% url 'dashboard:export_report_excel' %}?start_date={{ start_date }}&end_date={{ end_date }}" class="btn btn-success">
+                                    <i class="ti ti-download"></i> Download Excel
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <!-- Pie Chart -->
+        <div class="col-lg-6">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h4 class="card-title">Income vs Expense</h4>
+                    <div id="chart-container" style="height: 300px;">
+                        <canvas id="balanceChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics -->
+        <div class="col-lg-6">
+            <div class="row h-100">
+                <div class="col-12 mb-4">
+                    <div class="card h-100 bg-light-primary border-0">
+                        <div class="card-body d-flex align-items-center">
+                            <span class="btn btn-primary rounded-circle round-48 hstack justify-content-center">
+                                <i class="ti ti-currency-dollar fs-6"></i>
+                            </span>
+                            <div class="ms-3">
+                                <h4 class="mb-0 fw-bold">₹{{ total_income|floatformat:2 }}</h4>
+                                <span class="text-muted">Total Income</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="card h-100 bg-light-danger border-0">
+                        <div class="card-body d-flex align-items-center">
+                            <span class="btn btn-danger rounded-circle round-48 hstack justify-content-center">
+                                <i class="ti ti-receipt fs-6"></i>
+                            </span>
+                            <div class="ms-3">
+                                <h4 class="mb-0 fw-bold">₹{{ total_expense|floatformat:2 }}</h4>
+                                <span class="text-muted">Total Expense</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Table -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Detailed Records</h4>
+                    <div class="table-responsive mt-3">
+                        <table class="table align-middle text-nowrap table-hover">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Category/Head</th>
+                                    <th>Date</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in income_list %}
+                                <tr>
+                                    <td><span class="badge bg-success">Income</span></td>
+                                    <td>{{ item.incomehead.namefield }}</td>
+                                    <td>{{ item.date|date:"d M Y" }}</td>
+                                    <td>₹{{ item.amount }}</td>
+                                </tr>
+                                {% endfor %}
+                                {% for item in expense_list %}
+                                <tr>
+                                    <td><span class="badge bg-danger">Expense</span></td>
+                                    <td>{{ item.expensehead.name }}</td>
+                                    <td>{{ item.date|date:"d M Y" }}</td>
+                                    <td>₹{{ item.amount }}</td>
+                                </tr>
+                                {% endfor %}
+                                {% if not income_list and not expense_list %}
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted">No records found for the selected period.</td>
+                                </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const ctx = document.getElementById('balanceChart').getContext('2d');
+        const totalIncome = {{ total_income }};
+        const totalExpense = {{ total_expense }};
+
+        if (totalIncome === 0 && totalExpense === 0) {
+            document.getElementById('chart-container').innerHTML = '<div class="d-flex align-items-center justify-content-center h-100 text-muted">No data available for chart</div>';
+            return;
+        }
+
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Income', 'Expense'],
+                datasets: [{
+                    data: [totalIncome, totalExpense],
+                    backgroundColor: ['#13DEB9', '#FA896B'],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    });
+</script>
+
+{% include 'Layout/Partials/Admin/footer.html' %}

@@ -11,8 +11,9 @@ from app_core.models import Location
 from app_dashboard.models import UserRegistration
 from financetracker.users.models import User
 from django.core.mail import send_mail
-
-
+from django.db.models import Sum
+from app_user.models import IncomeDetails, ExpenseDetails
+import xlwt
 
 
 # Create your views here.
@@ -108,3 +109,76 @@ def about(request):
 
 def services(request):
     return render(request, "services.html")
+
+@login_required(login_url='/loginf/')
+def admin_report(request):
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
+
+    income_list = IncomeDetails.objects.all()
+    expense_list = ExpenseDetails.objects.all()
+
+    if start_date and end_date:
+        income_list = income_list.filter(date__range=[start_date, end_date])
+        expense_list = expense_list.filter(date__range=[start_date, end_date])
+
+    total_income = income_list.aggregate(Sum('amount'))['amount__sum'] or 0
+    total_expense = expense_list.aggregate(Sum('amount'))['amount__sum'] or 0
+
+    context = {
+        'income_list': income_list,
+        'expense_list': expense_list,
+        'total_income': float(total_income),
+        'total_expense': float(total_expense),
+        'start_date': start_date,
+        'end_date': end_date,
+    }
+    return render(request, "admin_report.html", context)
+
+@login_required(login_url='/loginf/')
+def export_report_excel(request):
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
+
+    income_list = IncomeDetails.objects.all()
+    expense_list = ExpenseDetails.objects.all()
+
+    if start_date and end_date:
+        income_list = income_list.filter(date__range=[start_date, end_date])
+        expense_list = expense_list.filter(date__range=[start_date, end_date])
+
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="Finance_Report.xls"'
+
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet('Income and Expenses')
+
+    # Sheet header, first row
+    row_num = 0
+    font_style = xlwt.XFStyle()
+    font_style.font.bold = True
+
+    columns = ['Type', 'Category/Head', 'Date', 'Amount']
+
+    for col_num in range(len(columns)):
+        ws.write(row_num, col_num, columns[col_num], font_style)
+
+    # Sheet body, remaining rows
+    font_style = xlwt.XFStyle()
+
+    for row in income_list:
+        row_num += 1
+        ws.write(row_num, 0, 'Income', font_style)
+        ws.write(row_num, 1, row.incomehead.namefield, font_style)
+        ws.write(row_num, 2, str(row.date), font_style)
+        ws.write(row_num, 3, float(row.amount), font_style)
+
+    for row in expense_list:
+        row_num += 1
+        ws.write(row_num, 0, 'Expense', font_style)
+        ws.write(row_num, 1, row.expensehead.name, font_style)
+        ws.write(row_num, 2, str(row.date), font_style)
+        ws.write(row_num, 3, float(row.amount), font_style)
+
+    wb.save(response)
+    return response
